@@ -1,0 +1,12 @@
+$color-1: #fff;
+
+@mixin transition($time) {
+	transition: all linear $time;
+}
+
+.teste {
+	color: $color-1;
+	background-color: $color-1;
+	border-color: $color-1;
+	@include transition(.2s);
+}
