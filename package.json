@@ -2,7 +2,7 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.10",
-    "gulp-connect-multi": "^1.0.8",
-    "gulp-ruby-sass": "^2.0.6"
+    "gulp-ruby-sass": "^2.0.6",
+    "gulp-webserver": "^0.9.1"
   }
 }
