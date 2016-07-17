@@ -24,12 +24,11 @@ gulp.task('clean-css', function() {
 gulp.task('webserver', function() {
 	gulp.src('./')
 	.pipe(webserver({
-		fallback: 'index.html',
 		livereload: true,
 		open: true,
 		directoryListing: {
 			enable: true,
-			path: 'app'
+			path: './'
 		}
 	}));
 });
