@@ -1,1 +1,4 @@
-.teste{color:red;border-color:red;transition:all linear .2s}
+.teste {
+  color: red;
+  border-color: red;
+  transition: all linear 0.2s; }
