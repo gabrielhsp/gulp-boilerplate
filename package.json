@@ -1,4 +1,10 @@
 {
+  "name": "my_project",
+  "description": "Your project description here",
+  "version": "1.0.0",
+  "homepage": "http://www.yourwebsite.com",
+  "author": "Author's name here",
+  "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-banner": "^0.1.3",
