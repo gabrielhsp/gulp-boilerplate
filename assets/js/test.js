@@ -1,1 +1,0 @@
-$(function(){var o=3,n=5;console.log(o+n)});
