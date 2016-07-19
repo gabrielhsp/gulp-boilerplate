@@ -9,16 +9,15 @@ var pump 	  = require('pump');
 var webserver = require('gulp-webserver');
 
 // Default task
-gulp.task('default', ['banner', 'concat', 'sass', 'uglify', 'webserver', 'watch']);
+gulp.task('default', ['concat', 'sass', 'uglify', 'webserver', 'watch']);
 
 // Default comment
 var comment = '/*\n' +
-    ' * <%= pkg.name %> <%= pkg.version %>\n' +
-    ' * <%= pkg.description %>\n' +
-    ' * <%= pkg.homepage %>\n' +
-    ' *\n' +
-    ' * Copyright 2016, <%= pkg.author %>\n' +
-    ' * Released under the <%= pkg.license %> license.\n' +
+    ' * Theme Name: <%= pkg.name %>\n' +
+    ' * Author: <%= pkg.author %>\n' +
+    ' * Author URI: <%= pkg.homepage %>\n' +
+    ' * Description: <%= pkg.description %>\n' +
+    ' * Version: <%= pkg.version %>\n' +
     '*/\n\n';
 
 // Sass Task - Use to create sass task
