@@ -31,7 +31,7 @@ gulp.task('sass', function() {
 gulp.task('concat', function() {
 	return gulp.src('assets/css/*.css')
 		  .pipe(concat('style.css'))
-		  .pipe(cleanCSS())
+		  .pipe(cleanCSS({keepSpecialComments: 0}))
 		  .pipe(banner(comment, {
 		  	pkg: pkg
 		  }))
@@ -39,14 +39,14 @@ gulp.task('concat', function() {
 });
 
 // Uglify Task - Use to minify js files
-gulp.task('uglify', function(cb) {
-	pump([
-		gulp.src('assets/_js/*.js'),
-		uglify(),
-		gulp.dest('assets/js/')
-	],
-	cb
-	);
+gulp.task('uglify', function() {
+	gulp.src('assets/_js/**/*.js')
+	.pipe(concat('app.min.js'))
+	.pipe(uglify())
+	.pipe(banner(comment, {
+		pkg: pkg
+	}))
+	.pipe(gulp.dest('assets/js/'))
 });
 
 // Webserver task - Use to start a local webserver
