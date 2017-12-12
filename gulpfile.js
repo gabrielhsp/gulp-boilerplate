@@ -1,70 +1,108 @@
-var gulp 	  = require('gulp');
-var banner    = require('gulp-banner');
-var concat	  = require('gulp-concat');
-var cleanCSS  = require('gulp-clean-css');
-var sass 	  = require('gulp-ruby-sass');
-var uglify	  = require('gulp-uglify');
-var pkg		  = require('./package.json');
-var pump 	  = require('pump');
-var webserver = require('gulp-webserver');
+const gulp 			= require('gulp'),
+	$ 				= require('gulp-load-plugins')(),
+	pkg 			= require('./package.json'),
+	banner 			= require('gulp-banner'),
+	cssnano 		= require('cssnano'),
+	cssMqpacker 	= require('css-mqpacker'),
+	autoprefixer 	= require('autoprefixer'),
+	named 			= require('vinyl-named'),
+	webpack 		= require('webpack-stream'),
+	webserver 		= require('gulp-webserver');
 
-// Default task
-gulp.task('default', ['concat', 'sass', 'uglify', 'webserver', 'watch']);
+const paths = {
+	js: 'src/scripts/**/*.js',
+	scss: 'src/styles/**/*.scss',
+	css: 'src/css/*.css',
+	webpack: 'src/scripts/*.js'
+};
 
 // Default comment
-var comment = '/*\n' +
-    ' * Theme Name: <%= pkg.name %>\n' +
-    ' * Author: <%= pkg.author %>\n' +
-    ' * Author URI: <%= pkg.homepage %>\n' +
-    ' * Description: <%= pkg.description %>\n' +
-    ' * Version: <%= pkg.version %>\n' +
-    '*/\n\n';
+const comment = '/*\n' +
+	' * Theme Name: <%= pkg.name %>\n' +
+	' * Author: <%= pkg.author %>\n' +
+	' * Author URI: <%= pkg.homepage %>\n' +
+	' * Description: <%= pkg.description %>\n' +
+	' * Version: <%= pkg.version %>\n' +
+	'*/\n\n';
 
-// Sass Task - Use to create sass task
-gulp.task('sass', function() {
-    sass('assets/scss/**/*.scss')
-        .on('error', sass.logError)
-        .pipe(gulp.dest('assets/css/'));
+gulp.task('styles', () => {
+	return gulp.src(paths.scss)
+		.pipe($.plumber())
+		.pipe($.sass({
+			errLogToConsole: true,
+			outputStyle: 'compressed',
+			includePaths: ['src/styles']
+		}).on('error', $.sass.logError))
+		.pipe($.postcss([
+			cssMqpacker({
+				sort: true
+			}),
+			cssnano({
+				autoprefixer: false,
+				reduceIdents: false
+			})
+		]))
+		.pipe($.postcss([
+			autoprefixer()
+		]))
+		.pipe(banner(comment, {
+			pkg: pkg
+		}))
+		.pipe($.sourcemaps.write('.'))
+		.pipe(gulp.dest('./'))
+		.pipe($.rename(file => file.basename = file.basename.replace('.min', '')))
+		.pipe(gulp.dest('./'))
 });
 
-// Concat and Clean task
-gulp.task('concat', function() {
-	return gulp.src('assets/css/*.css')
-		  .pipe(concat('style.css'))
-		  .pipe(cleanCSS({keepSpecialComments: 0}))
-		  .pipe(banner(comment, {
-		  	pkg: pkg
-		  }))
-		  .pipe(gulp.dest('./'));
-});
+gulp.task('scripts', () => {
+	return gulp.src(paths.webpack)
+		.pipe($.plumber())
+		.pipe(named())
+		.pipe(webpack({
+			output: {
+				filename: '[name].min.js'
+			},
 
-// Uglify Task - Use to minify js files
-gulp.task('uglify', function() {
-	gulp.src('assets/_js/**/*.js')
-	.pipe(concat('app.min.js'))
-	.pipe(uglify())
-	.pipe(banner(comment, {
-		pkg: pkg
-	}))
-	.pipe(gulp.dest('assets/js/'))
+			resolve: {
+				modules: ['src/scripts', 'node_modules']
+			},
+
+			plugins: [
+				new webpack.webpack.DefinePlugin({
+					VERSION: JSON.stringify(pkg.version)
+				}),
+
+				new webpack.webpack.BannerPlugin('Build Version: ' + pkg.version),
+
+				new webpack.webpack.optimize.UglifyJsPlugin({
+					minimize: true,
+					compress: {
+						warnings: false
+					}
+				})
+			]
+		}))
+		.pipe(gulp.dest('build/'))
 });
 
 // Webserver task - Use to start a local webserver
-gulp.task('webserver', function() {
+gulp.task('webserver', () => {
 	gulp.src('./')
-	.pipe(webserver({
-		livereload: true,
-		open: true,
-		directoryListing: {
-			enable: true,
-			path: './'
-		}
-	}));
+		.pipe(webserver({
+			livereload: true,
+			open: true,
+			directoryListing: {
+				enable: true,
+				path: './'
+			}
+		}));
 });
 
+// Default task
+gulp.task('default', ['styles', 'scripts', 'webserver', 'watch']);
+
 // Watch task - Use to watch change in your files and execute other tasks
-gulp.task('watch', function() {
-	gulp.watch(['assets/_js/**/*.js'], ['uglify']);
-	gulp.watch(['assets/scss/**/*.scss'], ['sass']);
-	gulp.watch(['assets/css/**/*.css'], ['concat']);
+gulp.task('watch', () => {
+	gulp.watch([paths.js], ['scripts']);
+	gulp.watch([paths.scss], ['styles']);
 });
