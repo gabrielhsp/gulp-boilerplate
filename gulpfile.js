@@ -10,8 +10,6 @@ const gulp 			= require('gulp'),
 	browserSync 	= require('browser-sync'),
 	webpack 		= require('webpack-stream');
 
-const reload = browserSync.reload();
-
 const paths = {
 	js: 'src/scripts/**/*.js',
 	scss: 'src/styles/**/*.scss',
