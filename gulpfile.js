@@ -6,13 +6,17 @@ const gulp 			= require('gulp'),
 	cssMqpacker 	= require('css-mqpacker'),
 	autoprefixer 	= require('autoprefixer'),
 	named 			= require('vinyl-named'),
-	webpack 		= require('webpack-stream'),
-	webserver 		= require('gulp-webserver');
+	connect 		= require('gulp-connect-php'),
+	browserSync 	= require('browser-sync'),
+	webpack 		= require('webpack-stream');
+
+const reload = browserSync.reload();
 
 const paths = {
 	js: 'src/scripts/**/*.js',
 	scss: 'src/styles/**/*.scss',
 	css: 'src/css/*.css',
+	php: './*.php',
 	webpack: 'src/scripts/*.js'
 };
 
@@ -85,21 +89,21 @@ gulp.task('scripts', () => {
 		.pipe(gulp.dest('build/'))
 });
 
-// Webserver task - Use to start a local webserver
-gulp.task('webserver', () => {
-	gulp.src('./')
-		.pipe(webserver({
-			livereload: true,
-			open: true,
-			directoryListing: {
-				enable: true,
-				path: './'
-			}
-		}));
+// Connect and start a local php server using gulp-connect-php
+gulp.task('connect-sync', () => {
+	connect.server({}, () => {
+		browserSync({
+			proxy: '127.0.0.1:8000'
+		});
+	});
+
+	gulp.watch(paths.php).on('change', () => {
+		browserSync.reload();
+	});
 });
 
 // Default task
-gulp.task('default', ['styles', 'scripts', 'webserver', 'watch']);
+gulp.task('default', ['styles', 'scripts', 'connect-sync', 'watch']);
 
 // Watch task - Use to watch change in your files and execute other tasks
 gulp.task('watch', () => {
