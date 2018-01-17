@@ -54,6 +54,7 @@ gulp.task('styles', () => {
 		.pipe(gulp.dest('./'))
 		.pipe($.rename(file => file.basename = file.basename.replace('.min', '')))
 		.pipe(gulp.dest('./'))
+		.pipe(browserSync.stream());
 });
 
 gulp.task('scripts', () => {
@@ -85,6 +86,7 @@ gulp.task('scripts', () => {
 			]
 		}))
 		.pipe(gulp.dest('build/'))
+		.pipe(browserSync.stream());
 });
 
 // Connect and start a local php server using gulp-connect-php
@@ -104,7 +106,7 @@ gulp.task('connect-sync', () => {
 gulp.task('default', ['styles', 'scripts', 'connect-sync', 'watch']);
 
 // Watch task - Use to watch change in your files and execute other tasks
-gulp.task('watch', () => {
+gulp.task('watch', ['styles', 'scripts'], () => {
 	gulp.watch([paths.js], ['scripts']);
 	gulp.watch([paths.scss], ['styles']);
 });
