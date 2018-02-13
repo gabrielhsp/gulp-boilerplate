@@ -7,6 +7,9 @@
 	"license": "MIT",
 	"dependencies": {
 		"autoprefixer": "^7.2.2",
+		"babel-core": "^6.26.0",
+		"babel-loader": "^7.1.2",
+		"babel-preset-env": "^1.6.1",
 		"browser-sync": "^2.23.5",
 		"css-mqpacker": "^6.0.1",
 		"cssnano": "^3.10.0",

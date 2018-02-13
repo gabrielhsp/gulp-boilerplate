@@ -70,6 +70,16 @@ gulp.task('scripts', () => {
 				modules: ['src/scripts', 'node_modules']
 			},
 
+			module: {
+				loaders: [
+					{
+						test: /\.js$/,
+						use: 'babel-loader',
+						exclude: /node_modules/
+					}
+				]
+			},
+
 			plugins: [
 				new webpack.webpack.DefinePlugin({
 					VERSION: JSON.stringify(pkg.version)
