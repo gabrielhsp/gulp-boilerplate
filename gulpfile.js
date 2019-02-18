@@ -6,18 +6,13 @@ const gulp 			= require('gulp'),
 	cssMqpacker 	= require('css-mqpacker'),
 	autoprefixer 	= require('autoprefixer'),
 	named 			= require('vinyl-named'),
-	connect 		= require('gulp-connect-php'),
 	browserSync 	= require('browser-sync'),
 	webpack 		= require('webpack-stream'),
-	isWindowsEnv 	= process.env.NODE_ENV && process.env.NODE_ENV === 'windows',
-	windowsLocalServer = 'http://localhost:8082/estudos/';
+	isProductionEnv = process.env.NODE_ENV && process.env.NODE_ENV === 'production';
 
 const paths = {
-	icons: 'src/icons/**/*.svg',
 	js: 'src/scripts/**/*.js',
 	scss: 'src/styles/**/*.scss',
-	css: 'src/css/*.css',
-	php: './*.php',
 	webpack: 'src/scripts/*.js'
 };
 
@@ -30,36 +25,16 @@ const comment = '/*\n' +
 	' * Version: <%= pkg.version %>\n' +
 	'*/\n\n';
 
-gulp.task('icons', () => {
-	const fontName = 'urban-coworking';
-
-	return gulp.src(paths.icons)
-		.pipe($.iconfontCss({
-			fontName,
-			path: './src/icons/template.scss',
-			targetPath: '../styles/helpers/_icons.scss',
-			fontPath: './build',
-		}))
-		.pipe($.iconfont({
-			fontName,
-			normalize: true,
-			fontHeight: 1000,
-			centerHorizontally: true,
-			formats: ['ttf', 'eot', 'woff', 'svg', 'woff2'],
-			prependUnicode: false
-		}))
-		.pipe(gulp.dest('./src/fonts/'));
-});
-
 gulp.task('styles', () => {
 	return gulp.src(paths.scss)
 		.pipe($.plumber())
 		.pipe($.sass({
 			errLogToConsole: true,
-			outputStyle: 'compressed',
-			includePaths: ['src/styles', 'node_modules/tiny-slider/src/', 'node_modules/input-range-scss/', 'node_modules/glightbox/src/postcss/']
+			outputStyle: isProductionEnv ? 'compressed' : 'nested',
+			includePaths: ['src/styles', 'node_modules/']
 		}).on('error', $.sass.logError))
-		.pipe($.postcss([
+		.pipe(isProductionEnv ? $.postcss([
+			autoprefixer(),
 			cssMqpacker({
 				sort: true
 			}),
@@ -67,17 +42,12 @@ gulp.task('styles', () => {
 				autoprefixer: false,
 				reduceIdents: false
 			})
-		]))
-		.pipe($.postcss([
-			autoprefixer()
-		]))
+		]) : $.util.noop())
 		.pipe(banner(comment, {
 			pkg: pkg
 		}))
-		.pipe($.sourcemaps.write('.'))
-		.pipe(gulp.dest('./'))
-		.pipe($.rename(file => file.basename = file.basename.replace('.min', '')))
-		.pipe(gulp.dest('./'))
+		.pipe(isProductionEnv ? $.util.noop() : $.sourcemaps.write('.'))
+		.pipe(gulp.dest('./build/css/'))
 		.pipe(browserSync.stream());
 });
 
@@ -86,6 +56,8 @@ gulp.task('scripts', () => {
 		.pipe($.plumber())
 		.pipe(named())
 		.pipe(webpack({
+			mode: isProductionEnv ? 'production' : 'development',
+
 			output: {
 				filename: '[name].min.js'
 			},
@@ -95,43 +67,36 @@ gulp.task('scripts', () => {
 			},
 
 			module: {
-				loaders: [
+				rules: [
 					{
 						test: /\.js$/,
-						use: 'babel-loader',
-						exclude: /node_modules/
+						exclude: /node_modules/,
+						use: {
+							loader: 'babel-loader?cacheDirectory',
+							options: {
+								presets: ['@babel/preset-env', '@babel/preset-react'],
+								plugins: ['@babel/plugin-proposal-class-properties']
+							}
+						}
 					}
 				]
 			},
 
-			plugins: [
-				new webpack.webpack.DefinePlugin({
-					VERSION: JSON.stringify(pkg.version)
-				}),
+			devtool: isProductionEnv ? '' : 'source-map',
 
-				new webpack.webpack.BannerPlugin('Build Version: ' + pkg.version),
-
-				new webpack.webpack.optimize.UglifyJsPlugin({
-					minimize: true,
-					compress: {
-						warnings: false
-					}
-				})
-			]
+			optimization: {
+				minimize: !!isProductionEnv
+			}
 		}))
-		.pipe(gulp.dest('build/'))
+		.pipe(gulp.dest('build/scripts/'))
 		.pipe(browserSync.stream());
 });
 
-// Connect and start a local php server using gulp-connect-php
-gulp.task('connect-sync', () => {
-	connect.server({}, () => {
-		browserSync({
-			proxy: isWindowsEnv ? windowsLocalServer : '127.0.0.1:8000'
-		});
-	});
 
-	gulp.watch(paths.php).on('change', () => browserSync.reload());
+gulp.task('connect-sync', () => {
+	browserSync.init({
+		server: { baseDir: './build/' }
+	})
 });
 
 // Default task
