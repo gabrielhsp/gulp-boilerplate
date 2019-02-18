@@ -26,5 +26,16 @@
 		"gulp-webserver": "^0.9.1",
 		"vinyl-named": "^1.1.0",
 		"webpack-stream": "^4.0.0"
+	},
+	"devDependencies": {
+		"cross-env": "^5.2.0",
+		"glightbox": "^1.0.9",
+		"gulp-iconfont": "^10.0.2",
+		"gulp-iconfont-css": "^3.0.0",
+		"tiny-slider": "^2.9.1"
+	},
+	"scripts": {
+		"start": "gulp",
+		"start-windows": "cross-env NODE_ENV=windows gulp"
 	}
 }

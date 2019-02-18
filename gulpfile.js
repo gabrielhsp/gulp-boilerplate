@@ -8,9 +8,12 @@ const gulp 			= require('gulp'),
 	named 			= require('vinyl-named'),
 	connect 		= require('gulp-connect-php'),
 	browserSync 	= require('browser-sync'),
-	webpack 		= require('webpack-stream');
+	webpack 		= require('webpack-stream'),
+	isWindowsEnv 	= process.env.NODE_ENV && process.env.NODE_ENV === 'windows',
+	windowsLocalServer = 'http://localhost:8082/estudos/';
 
 const paths = {
+	icons: 'src/icons/**/*.svg',
 	js: 'src/scripts/**/*.js',
 	scss: 'src/styles/**/*.scss',
 	css: 'src/css/*.css',
@@ -27,13 +30,34 @@ const comment = '/*\n' +
 	' * Version: <%= pkg.version %>\n' +
 	'*/\n\n';
 
+gulp.task('icons', () => {
+	const fontName = 'urban-coworking';
+
+	return gulp.src(paths.icons)
+		.pipe($.iconfontCss({
+			fontName,
+			path: './src/icons/template.scss',
+			targetPath: '../styles/helpers/_icons.scss',
+			fontPath: './build',
+		}))
+		.pipe($.iconfont({
+			fontName,
+			normalize: true,
+			fontHeight: 1000,
+			centerHorizontally: true,
+			formats: ['ttf', 'eot', 'woff', 'svg', 'woff2'],
+			prependUnicode: false
+		}))
+		.pipe(gulp.dest('./src/fonts/'));
+});
+
 gulp.task('styles', () => {
 	return gulp.src(paths.scss)
 		.pipe($.plumber())
 		.pipe($.sass({
 			errLogToConsole: true,
 			outputStyle: 'compressed',
-			includePaths: ['src/styles']
+			includePaths: ['src/styles', 'node_modules/tiny-slider/src/', 'node_modules/input-range-scss/', 'node_modules/glightbox/src/postcss/']
 		}).on('error', $.sass.logError))
 		.pipe($.postcss([
 			cssMqpacker({
@@ -103,13 +127,11 @@ gulp.task('scripts', () => {
 gulp.task('connect-sync', () => {
 	connect.server({}, () => {
 		browserSync({
-			proxy: '127.0.0.1:8000'
+			proxy: isWindowsEnv ? windowsLocalServer : '127.0.0.1:8000'
 		});
 	});
 
-	gulp.watch(paths.php).on('change', () => {
-		browserSync.reload();
-	});
+	gulp.watch(paths.php).on('change', () => browserSync.reload());
 });
 
 // Default task
