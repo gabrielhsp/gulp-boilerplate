@@ -9,8 +9,9 @@ const gulp 			= require('gulp'),
 	connect 		= require('gulp-connect-php'),
 	browserSync 	= require('browser-sync'),
 	webpack 		= require('webpack-stream'),
+	windowsLocalServer = 'http://localhost:8082/estudos/',
 	isWindowsEnv 	= process.env.NODE_ENV && process.env.NODE_ENV === 'windows',
-	windowsLocalServer = 'http://localhost:8082/estudos/';
+	isProductionEnv = process.env.NODE_ENV && process.env.NODE_ENV === 'production';
 
 const paths = {
 	icons: 'src/icons/**/*.svg',
@@ -86,6 +87,8 @@ gulp.task('scripts', () => {
 		.pipe($.plumber())
 		.pipe(named())
 		.pipe(webpack({
+			mode: isProductionEnv ? 'production' : 'development',
+
 			output: {
 				filename: '[name].min.js'
 			},
@@ -95,31 +98,24 @@ gulp.task('scripts', () => {
 			},
 
 			module: {
-				loaders: [
+				rules: [
 					{
 						test: /\.js$/,
-						use: 'babel-loader',
-						exclude: /node_modules/
+						exclude: /node_modules/,
+						use: {
+							loader: 'babel-loader?cacheDirectory'
+						}
 					}
 				]
 			},
 
-			plugins: [
-				new webpack.webpack.DefinePlugin({
-					VERSION: JSON.stringify(pkg.version)
-				}),
+			devtool: isProductionEnv ? '' : 'source-map',
 
-				new webpack.webpack.BannerPlugin('Build Version: ' + pkg.version),
-
-				new webpack.webpack.optimize.UglifyJsPlugin({
-					minimize: true,
-					compress: {
-						warnings: false
-					}
-				})
-			]
+			optimization: {
+				minimize: !!isProductionEnv
+			}
 		}))
-		.pipe(gulp.dest('build/'))
+		.pipe(gulp.dest('build/scripts'))
 		.pipe(browserSync.stream());
 });
 
