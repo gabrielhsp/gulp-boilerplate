@@ -5,6 +5,12 @@
 	"homepage": "http://www.yourwebsite.com",
 	"author": "Author's name here",
 	"license": "MIT",
+	"scripts": {
+		"start": "gulp",
+		"start-windows": "cross-env NODE_ENV=windows gulp",
+		"build": "cross-env NODE_ENV=production gulp",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
 	"dependencies": {
 		"autoprefixer": "^7.2.2",
 		"babel-core": "^6.26.0",
@@ -33,9 +39,5 @@
 		"gulp-iconfont": "^10.0.2",
 		"gulp-iconfont-css": "^3.0.0",
 		"tiny-slider": "^2.9.1"
-	},
-	"scripts": {
-		"start": "gulp",
-		"start-windows": "cross-env NODE_ENV=windows gulp"
 	}
 }
