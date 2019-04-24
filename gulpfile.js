@@ -4,6 +4,7 @@ const gulp 			= require('gulp'),
 	banner 			= require('gulp-banner'),
 	cssnano 		= require('cssnano'),
 	cssMqpacker 	= require('css-mqpacker'),
+	faustaoErrou 	= require('gulp-faustao-errou'),
 	autoprefixer 	= require('autoprefixer'),
 	named 			= require('vinyl-named'),
 	connect 		= require('gulp-connect-php'),
@@ -54,7 +55,7 @@ gulp.task('icons', () => {
 
 gulp.task('styles', () => {
 	return gulp.src(paths.scss)
-		.pipe($.plumber())
+		.pipe($.plumber({ errorHandler: (err) => faustaoErrou.errou(err) }))
 		.pipe($.sass({
 			errLogToConsole: true,
 			outputStyle: 'compressed',
@@ -84,7 +85,7 @@ gulp.task('styles', () => {
 
 gulp.task('scripts', () => {
 	return gulp.src(paths.webpack)
-		.pipe($.plumber())
+		.pipe($.plumber({ errorHandler: (err) => faustaoErrou.errou(err) }))
 		.pipe(named())
 		.pipe(webpack({
 			mode: isProductionEnv ? 'production' : 'development',

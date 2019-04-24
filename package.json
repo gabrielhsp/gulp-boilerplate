@@ -36,6 +36,7 @@
 	"devDependencies": {
 		"cross-env": "^5.2.0",
 		"glightbox": "^1.0.9",
+		"gulp-faustao-errou": "^1.0.0",
 		"gulp-iconfont": "^10.0.2",
 		"gulp-iconfont-css": "^3.0.0"
 	}
