@@ -33,7 +33,7 @@ const comment = '/*\n' +
 	'*/\n\n';
 
 gulp.task('icons', () => {
-	const fontName = 'urban-coworking';
+	const fontName = 'font-name';
 
 	return gulp.src(paths.icons)
 		.pipe($.iconfontCss({

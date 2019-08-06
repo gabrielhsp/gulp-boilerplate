@@ -1,0 +1,87 @@
+$icons: (
+	
+		'sun': '\E001',
+	
+		'user-group': '\E002',
+	
+);
+
+$icon-pecas: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAlCAYAAADFniADAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE4NDk5ODhENjY2RjExRTc4NjNCQkVCRTNCODI0QTU1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE4NDk5ODhFNjY2RjExRTc4NjNCQkVCRTNCODI0QTU1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTg0OTk4OEI2NjZGMTFFNzg2M0JCRUJFM0I4MjRBNTUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTg0OTk4OEM2NjZGMTFFNzg2M0JCRUJFM0I4MjRBNTUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7RMlk/AAAGVElEQVR42rxY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';
+
+@font-face {
+	font-family: 'font-name';
+	font-style: normal;
+	font-weight: normal;
+	src: url('./src/fonts/urban-coworking.eot'),
+	url('./src/fonts/urban-coworking.eot?#iefix') format('embedded-opentype'),
+	url('./src/fonts/urban-coworking.woff') format('woff'),
+	url('./src/fonts/urban-coworking.ttf') format('truetype'),
+	url('./src/fonts/urban-coworking.woff2') format('woff2'),
+	url('./src/fonts/urban-coworking.svg') format('svg');
+}
+
+.icon {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	font-family: 'font-name';
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: 1;
+	speak: none;
+	text-transform: none;
+	@each $key,
+	$value in $icons {
+		&.icon-#{$key}:before {
+			content: $value
+		}
+	};
+}
+
+%icon-hamburger {
+	@include responsiveFont(13);
+	display: inline-block;
+	height: 2px;
+	position: absolute !important;
+	width: 16px;
+	&:before,
+	&:after {
+		content: ' ';
+		height: 2px;
+		position: absolute;
+		right: 0;
+		width: 100%;
+	}
+	&:before {
+		top: -5px;
+	}
+	&:after {
+		bottom: -5px;
+	}
+}
+
+@mixin icon-hamburger ($color: #fff) {
+	@extend %icon-hamburger;
+	background-color: $color;
+	&:before,
+	&:after {
+		background-color: $color;
+	}
+}
+
+.icon-hamburger {
+	@include icon-hamburger();
+}
+
+@mixin icon-get( $icon) {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	content: map-get($icons, $icon) !important;
+	font-family: 'font-name' !important;
+	font-style: normal !important;
+	font-variant: normal !important;
+	font-weight: normal !important;
+	line-height: 1;
+	speak: none;
+	text-transform: none !important;
+};
